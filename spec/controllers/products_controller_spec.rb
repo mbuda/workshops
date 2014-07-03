@@ -5,7 +5,7 @@ describe ProductsController do
 
   let(:category) { create(:category) }
 
-  let(:valid_attributes) { { "title" => "MyString", "category_id" => category.id } }
+  let(:valid_attributes) { { "title" => "MyString", "description" => "MyText", "price" => "1.5", "category_id" => category.id } }
 
   let(:valid_session) { {} }
 
@@ -22,7 +22,7 @@ describe ProductsController do
     describe "PUT update" do
       describe "with valid params" do
         it "redirects user to login page" do
-          product = Product.create! valid_attributes
+          product = Product.create!(valid_attributes)
           put :update, { id: product.to_param, product: { "title" => "MyString" }, category_id: category.to_param }, valid_session
           expect(response).to redirect_to(new_user_session_path)
         end
@@ -33,7 +33,7 @@ describe ProductsController do
   context 'another user is singed in' do
     let(:user) { create(:user) }
     let(:user2) { build(:user) }
-    let(:product) { Product.create! valid_attributes }
+    let(:product) { Product.create!(valid_attributes) }
 
     before do
       sign_in user2
@@ -79,7 +79,7 @@ describe ProductsController do
 
   describe "GET index" do
     it "expose all products" do
-      product = Product.create! valid_attributes
+      product = Product.create!(valid_attributes)
       get :index, {}, valid_session
       expect(controller.products).to eq([product])
     end
@@ -87,7 +87,7 @@ describe ProductsController do
 
   describe "GET show" do
     it "expose the requested product" do
-      product = Product.create! valid_attributes
+      product = Product.create!(valid_attributes)
       get :show, { id: product.to_param, category_id: category.to_param }, valid_session
       expect(controller.product).to eq(product)
     end
@@ -102,7 +102,7 @@ describe ProductsController do
 
   describe "GET edit" do
     it "expose the requested product" do
-      product = Product.create! valid_attributes
+      product = Product.create!(valid_attributes)
       get :edit, { id: product.to_param, category_id: category.to_param }, valid_session
       expect(controller.product).to eq(product)
     end

@@ -1,5 +1,6 @@
 class Product < ActiveRecord::Base
-  validates_presence_of :title, :description, :price
+  validates_presence_of :title, :description
+  validates_numericality_of :price
   belongs_to :category
   belongs_to :user
   has_many :reviews

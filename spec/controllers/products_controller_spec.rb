@@ -9,7 +9,7 @@ describe ProductsController do
 
   let(:valid_session) { {} }
 
-  context 'user is not singed in' do
+  context 'user is not signed in' do
     describe "POST create" do
       describe "with valid params" do
         it "redirects user to login page" do
@@ -30,7 +30,7 @@ describe ProductsController do
     end
   end
 
-  context 'another user is singed in' do
+  context 'another user is signed in' do
     let(:user) { create(:user) }
     let(:user2) { build(:user) }
     let(:product) { Product.create!(valid_attributes) }

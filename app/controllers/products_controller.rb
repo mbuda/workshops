@@ -16,6 +16,7 @@ class ProductsController < ApplicationController
   end
 
   def edit
+    redirect_to category_product_url(category, product)
   end
 
   def create

@@ -1,5 +1,5 @@
 class ProductsController < ApplicationController
-  before_action :is_owner?, only: [:update, :create, :edit]
+  before_action :is_owner?, only: [:update, :edit]
 
   expose(:category)
   expose(:products)
@@ -23,8 +23,13 @@ class ProductsController < ApplicationController
     self.product = Product.new(product_params)
 
     if product.save
+      if current_user.nil?
+        redirect_to new_user_session_path
+        return
+      else
         category.products << product
         redirect_to category_product_url(category, product), notice: 'Product was successfully created.'
+      end
     else
       render action: 'new'
     end
@@ -32,7 +37,11 @@ class ProductsController < ApplicationController
 
   def update
     if self.product.update(product_params)
-      redirect_to category_product_url(category, product)
+      if current_user.nil?
+        redirect_to new_user_session_path
+      else
+        redirect_to category_product_url(category, product)
+      end
     else
       render action: 'edit'
     end
@@ -46,7 +55,7 @@ class ProductsController < ApplicationController
 
   private
     def is_owner?
-      unless self.product.user == current_user
+      if self.product.user != current_user && !current_user.nil?
         redirect_to category_product_url(category, product)
         flash[:error] =  'You are not allowed to edit this product.'
       end

@@ -108,76 +108,80 @@ describe ProductsController do
     end
   end
 
-  describe "POST create" do
-    describe "with valid params" do
-      it "creates a new Product" do
-        expect {
+  context "user is signed in" do
+    let(:user) { create(:user) }
+    let(:product) { Product.create!(valid_attributes) }
+
+    before do
+      sign_in user
+      product.user = user
+    end
+
+    describe "POST create" do
+      describe "with valid params" do
+        it "creates a new Product" do
+          expect {
+            post :create, { product: valid_attributes, category_id: category.to_param }, valid_session
+          }.to change(Product, :count).by(1)
+        end
+
+        it "expose a newly created product" do
           post :create, { product: valid_attributes, category_id: category.to_param }, valid_session
-        }.to change(Product, :count).by(1)
+          expect(controller.product).to be_a(Product)
+          expect(controller.product).to be_persisted
+        end
+
+        it "redirects to the created product" do
+          post :create, { product: valid_attributes, category_id: category.to_param }, valid_session
+          response.should redirect_to(category_product_url(category, Product.last))
+        end
       end
 
-      it "expose a newly created product" do
-        post :create, { product: valid_attributes, category_id: category.to_param }, valid_session
-        expect(controller.product).to be_a(Product)
-        expect(controller.product).to be_persisted
-      end
+      describe "with invalid params" do
+        it "expose a newly created but unsaved product" do
 
-      it "redirects to the created product" do
-        post :create, { product: valid_attributes, category_id: category.to_param }, valid_session
-        response.should redirect_to(category_product_url(category, Product.last))
-      end
-    end
+          Product.any_instance.stub(:save).and_return(false)
+          post :create, { product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
+          expect(controller.product).to be_a_new(Product)
+        end
 
-    describe "with invalid params" do
-      it "expose a newly created but unsaved product" do
-
-        Product.any_instance.stub(:save).and_return(false)
-        post :create, { product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
-        expect(controller.product).to be_a_new(Product)
-      end
-
-      it "re-renders the 'new' template" do
-        Product.any_instance.stub(:save).and_return(false)
-        post :create, { product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
-        response.should render_template("new")
-      end
-    end
-  end
-
-  describe "PUT update" do
-    describe "with valid params" do
-      it "updates the requested product" do
-        product = Product.create! valid_attributes
-        Product.any_instance.should_receive(:update).with({ "title" => "MyString" })
-        put :update, { id: product.to_param, product: { "title" => "MyString" }, category_id: category.to_param }, valid_session
-      end
-
-      it "expose the requested product" do
-        product = Product.create! valid_attributes
-        put :update, { id: product.to_param, product: valid_attributes, category_id: category.to_param }, valid_session
-        expect(controller.product).to eq(product)
-      end
-
-      it "redirects to the product" do
-        product = Product.create! valid_attributes
-        put :update, { id: product.to_param, product: valid_attributes, category_id: category.to_param }, valid_session
-        response.should redirect_to(category_product_url(category, product))
+        it "re-renders the 'new' template" do
+          Product.any_instance.stub(:save).and_return(false)
+          post :create, { product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
+          response.should render_template("new")
+        end
       end
     end
 
-    describe "with invalid params" do
-      it "expose the product" do
-        product = Product.create! valid_attributes
-        Product.any_instance.stub(:save).and_return(false)
-        put :update, { id: product.to_param, product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
-        expect(controller.product).to eq(product)
+    describe "PUT update" do
+      describe "with valid params" do
+        it "updates the requested product" do
+          put :update, { id: product.to_param, product: { "title" => "MyString" }, category_id: category.to_param }, valid_session
+        end
+
+        it "expose the requested product" do
+          put :update, { id: product.to_param, product: valid_attributes, category_id: category.to_param }, valid_session
+          expect(controller.product).to eq(product)
+        end
+
+        it "redirects to the product" do
+          put :update, { id: product.to_param, product: valid_attributes, category_id: category.to_param }, valid_session
+          response.should redirect_to(category_product_url(category, product))
+        end
       end
 
-      it "re-renders the 'edit' template" do
-        product = Product.create! valid_attributes
-        Product.any_instance.stub(:save).and_return(false)
-        put :update, { id: product.to_param, product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
-        response.should render_template("edit")
+      describe "with invalid params" do
+        it "expose the product" do
+          Product.any_instance.stub(:save).and_return(false)
+          put :update, { id: product.to_param, product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
+          expect(controller.product).to eq(product)
+        end
+
+        it "re-renders the 'edit' template" do
+          Product.any_instance.stub(:save).and_return(false)
+          put :update, { id: product.to_param, product: { "title" => "invalid value" }, category_id: category.to_param }, valid_session
+          response.should render_template("edit")
+        end
       end
     end
   end

@@ -77,43 +77,15 @@ describe ProductsController do
     end
   end
 
-  describe "GET index" do
-    it "expose all products" do
-      product = Product.create!(valid_attributes)
-      get :index, {}, valid_session
-      expect(controller.products).to eq([product])
-    end
-  end
-
-  describe "GET show" do
-    it "expose the requested product" do
-      product = Product.create!(valid_attributes)
-      get :show, { id: product.to_param, category_id: category.to_param }, valid_session
-      expect(controller.product).to eq(product)
-    end
-  end
-
-  describe "GET new" do
-    it "expose a new product" do
-      get :new, { category_id: category.to_param }, valid_session
-      expect(controller.product).to be_a_new(Product)
-    end
-  end
-
-  describe "GET edit" do
-    it "expose the requested product" do
-      product = Product.create!(valid_attributes)
-      get :edit, { id: product.to_param, category_id: category.to_param }, valid_session
-      expect(controller.product).to eq(product)
-    end
-  end
-
   context "user is signed in" do
     let(:user) { create(:user) }
     let(:product) { Product.create!(valid_attributes) }
 
     before do
       sign_in user
+      controller.stub(:user_signed_in?).and_return(true)
+      controller.stub(:current_user).and_return(user)
+      controller.stub(:authenticate_user!).and_return(user)
       product.user = user
     end
 
@@ -154,6 +126,7 @@ describe ProductsController do
     end
 
     describe "PUT update" do
+
       describe "with valid params" do
         it "updates the requested product" do
           put :update, { id: product.to_param, product: { "title" => "MyString" }, category_id: category.to_param }, valid_session
@@ -183,6 +156,37 @@ describe ProductsController do
           response.should render_template("edit")
         end
       end
+    end
+  end
+
+  describe "GET index" do
+    it "expose all products" do
+      product = Product.create!(valid_attributes)
+      get :index, {}, valid_session
+      expect(controller.products).to eq([product])
+    end
+  end
+
+  describe "GET show" do
+    it "expose the requested product" do
+      product = Product.create!(valid_attributes)
+      get :show, { id: product.to_param, category_id: category.to_param }, valid_session
+      expect(controller.product).to eq(product)
+    end
+  end
+
+  describe "GET new" do
+    it "expose a new product" do
+      get :new, { category_id: category.to_param }, valid_session
+      expect(controller.product).to be_a_new(Product)
+    end
+  end
+
+  describe "GET edit" do
+    it "expose the requested product" do
+      product = Product.create!(valid_attributes)
+      get :edit, { id: product.to_param, category_id: category.to_param }, valid_session
+      expect(controller.product).to eq(product)
     end
   end
 

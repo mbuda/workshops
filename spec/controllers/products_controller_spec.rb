@@ -78,7 +78,7 @@ describe ProductsController do
   end
 
   context "user is signed in" do
-    let(:user) { create(:user) }
+    let!(:user) { create(:user) }
     let(:product) { Product.create!(valid_attributes) }
 
     before do
@@ -86,7 +86,7 @@ describe ProductsController do
       controller.stub(:user_signed_in?).and_return(true)
       controller.stub(:current_user).and_return(user)
       controller.stub(:authenticate_user!).and_return(user)
-      product.user = user
+      product.update_attributes user: user
     end
 
     describe "POST create" do
@@ -157,6 +157,21 @@ describe ProductsController do
         end
       end
     end
+
+    describe "DELETE destroy" do
+      it "destroys the requested product" do
+        product = Product.create! valid_attributes
+        expect {
+          delete :destroy, { id: product.to_param, category_id: category.to_param }, valid_session
+        }.to change(Product, :count).by(-1)
+      end
+
+      it "redirects to the category page" do
+        product = Product.create! valid_attributes
+        delete :destroy, { id: product.to_param, category_id: category.to_param }, valid_session
+        response.should redirect_to(category_url(category))
+      end
+    end
   end
 
   describe "GET index" do
@@ -187,21 +202,6 @@ describe ProductsController do
       product = Product.create!(valid_attributes)
       get :edit, { id: product.to_param, category_id: category.to_param }, valid_session
       expect(controller.product).to eq(product)
-    end
-  end
-
-  describe "DELETE destroy" do
-    it "destroys the requested product" do
-      product = Product.create! valid_attributes
-      expect {
-        delete :destroy, { id: product.to_param, category_id: category.to_param }, valid_session
-      }.to change(Product, :count).by(-1)
-    end
-
-    it "redirects to the category page" do
-      product = Product.create! valid_attributes
-      delete :destroy, { id: product.to_param, category_id: category.to_param }, valid_session
-      response.should redirect_to(category_url(category))
     end
   end
 

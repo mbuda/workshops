@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_filter :configure_devise_permitted_parameters, if: :devise_controller?
+  before_filter :configure_permitted_parameters, if: :devise_controller?
 
   decent_configuration do
     strategy DecentExposure::StrongParametersStrategy
@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   protected
-  def configure_devise_permitted_parameters
+  def configure_permitted_parameters
     registration_params = [:firstname, :lastname, :email, :password, :password_confirmation]
 
     if params[:action] == 'update'

@@ -4,3 +4,22 @@
 @import "scaffolds";
 @import "products";
 
+#user-actions {
+  .btn {
+    position: absolute;
+    top: 20px;
+    right: 15px;
+  }
+}
+
+#header {
+  margin-bottom: 15px;
+}
+
+.panel {
+  margin-bottom: 0;
+}
+
+.footer {
+  margin-top: 25px;
+}

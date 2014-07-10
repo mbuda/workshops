@@ -9,25 +9,37 @@
     = javascript_include_tag 'application'
 
   %body
-    .header
-      %h3 Netguru workshops
-      - unless current_user.nil?
-        = link_to destroy_user_session_path, method: :delete, class: 'pull-right btn btn-danger' do
-          %i.glyphicon.glyphicon-log-out
-          Log out,
-          = current_user.firstname
-    #menu.nav.navbar-default.pull-left
-      %ul.nav
-        %li
-          = link_to categories_path do
-            %i.glyphicon.glyphicon-list
-            Categories' list
-        %li
-          = link_to products_path do
-            %i.glyphicon.glyphicon-barcode
-            Products' list
     .container
-      = yield
-    .footer
-      %i.glyphicon.glyphicon-heart
-      Made for netguru workshops by Marta "Anaksamea" Buda
+      #header.row
+        .col-md-10.col-sm-9
+          %h3 Netguru workshops
+        .col-md-2.col-sm-3
+          #user-actions
+            - unless current_user.nil?
+              = link_to destroy_user_session_path, method: :delete, class: 'btn btn-danger' do
+                %i.glyphicon.glyphicon-log-out
+                Log out,
+                = current_user.firstname
+            - else
+              = link_to new_user_session_path, class: 'btn btn-info' do
+                %i.glypgicon.glyphicon-user
+                Log in
+      .row
+        .col-md-4.col-sm-3
+          .nav.navbar-default
+            %ul.nav
+              %li
+                = link_to categories_path do
+                  %i.glyphicon.glyphicon-list
+                  Categories' list
+              %li
+                = link_to products_path do
+                  %i.glyphicon.glyphicon-barcode
+                  Products' list
+        .col-md-8.col-sm-9
+          = yield
+      .row
+        .col-md-12.col-sm-12
+          .footer
+            %i.glyphicon.glyphicon-heart
+            Made for netguru workshops by Marta "Anaksamea" Buda

@@ -8,22 +8,27 @@ class User < ActiveRecord::Base
   has_many :reviews
   has_many :products
 
-  def firstname
+  def self.firstname
     @firstname
   end
 
-  def firstname=(firstname)
-    @firstname = firstname
+  def self.firstname=(name)
+    @firstname = name
   end
 
-  def lastname
+  def self.lastname
     @lastname
   end
 
-  def lastname=(lastname)
-    @lastname=lastname
+  def self.lastname=(name)
+    @lastname = name
   end
 
-  def admin?
+  def self.admin?
+    @admin
+  end
+
+  def self.admin=(bool)
+    @admin = bool
   end
 end

@@ -9,4 +9,25 @@
     = javascript_include_tag 'application'
 
   %body
-    = yield
+    .header
+      %h3 Netguru workshops
+      - unless current_user.nil?
+        = link_to destroy_user_session_path, method: :delete, class: 'pull-right btn btn-danger' do
+          %i.glyphicon.glyphicon-log-out
+          Log out,
+          = current_user.firstname
+    #menu.nav.navbar-default.pull-left
+      %ul.nav
+        %li
+          = link_to categories_path do
+            %i.glyphicon.glyphicon-list
+            Categories' list
+        %li
+          = link_to products_path do
+            %i.glyphicon.glyphicon-barcode
+            Products' list
+    .container
+      = yield
+    .footer
+      %i.glyphicon.glyphicon-heart
+      Made for netguru workshops by Marta "Anaksamea" Buda

@@ -9,10 +9,10 @@ class ApplicationController < ActionController::Base
 
   protected
   def user_params
-    params.require(:user).permit(:firstname, :lastname, :admin?)
+    params.require(:user).permit(:firstname, :lastname, :admin)
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << [:firstname, :lastname, :admin?]
+    devise_parameter_sanitizer.for(:sign_up) << [:firstname, :lastname, :admin]
   end
 end

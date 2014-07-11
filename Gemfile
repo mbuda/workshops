@@ -26,6 +26,8 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails'
+  gem 'capybara', github: 'jnicklas/capybara', branch: 'master'
+  gem 'warden'
   gem 'shoulda-matchers'
   gem 'pry'
 end

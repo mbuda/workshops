@@ -1,17 +1,36 @@
 %p#notice= notice
 
-%p
-  %b Name:
-  = category.name
+.panel.panel-default
+  .panel-heading
+    %h4= 'Category: ' + category.name
+  .panel-body
+    .row
+      .col-md-12.col-sm-12
+        %table.table.table-striped
+          %thead
+            %tr
+              %th Name
+              %th Number of reviews
+              %th Actions
+            %tbody
+              - category.products.each do |product|
+                %tr
+                  %td= link_to product.title, category_products_path(category, product)
+                  %td= product.reviews.size
+                  %td
+                    - if current_user == product.user
+                      = link_to 'Edit', edit_category_product_path(category, product), class: 'btn btn-info'
+                    - else
+                      None for you
 
-%p
-  - category.products.each do |product|
-    = product.title
+%btn#new-product.btn.btn-success
+  New product
+#new-product-form.panel.panel-default
+  .panel-heading
+    %h4 New product
+  .panel-body
+    = render 'products/form'
 
-%p
-  %h3 New product
-  = render 'products/form'
-
-= link_to 'Edit', edit_category_path(category)
-\|
-= link_to 'Back', categories_path
+#categories-actions
+  = link_to 'Edit category', edit_category_path(category), class: 'btn btn-info'
+  = link_to 'Back', categories_path, class: 'btn btn-primary'

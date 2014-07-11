@@ -6,5 +6,14 @@ FactoryGirl.define do
     lastname 'Doe'
     email 'test@test.com'
     password 'password123'
+    admin 'false'
+  end
+
+  factory :admin, class: 'User' do
+    firstname 'First'
+    lastname 'Last'
+    email 'admin@i.am'
+    password '12345678'
+    admin 'true'
   end
 end

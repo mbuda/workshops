@@ -1,21 +1,29 @@
-%h1 Listing products
+= content_for :title, 'List of products'
 
-%table
-  %tr
-    %th Title
-    %th Description
-    %th Price
-    %th
-    %th
-    %th
-
-  - products.each do |product|
-    %tr
-      %td= product.title
-      %td= product.description
-      %td= product.price
-      %td= link_to 'Show', category_product_path(product.category, product)
-      %td= link_to 'Edit', edit_category_product_path(product.category, product)
-      %td= link_to 'Destroy', category_product_path(product.category, product), method: :delete, data: { confirm: 'Are you sure?' }
+.panel.panel-default
+  .panel-heading
+    %h4 Listing products
+  .panel-body
+    .row
+      .col-md-12.col-xs-12
+        %table.table.table-striped
+          %thead
+            %tr
+              %th.col-md-3.col-xs-3 Title
+              %th.col-md-3.col-xs-3 Description
+              %th.col-md-3.col-xs-3 Price
+              %th.col-md-3.col-xs-3 Actions
+          %tbody
+            - products.each do |product|
+              %tr
+                %td= link_to product.title, category_product_path(product.category, product)
+                %td= product.description
+                %td= product.price
+                %td
+                  - if current_user && current_user == product.user
+                    = link_to 'Edit', edit_category_product_path(product.category, product)
+                    = link_to 'Destroy', category_product_path(product.category, product), method: :delete, data: { confirm: 'Are you sure?' }
+                  - else
+                    None for you
 
 %br

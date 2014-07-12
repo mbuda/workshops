@@ -15,7 +15,7 @@
             %tbody
               - category.products.each do |product|
                 %tr
-                  %td= link_to product.title, category_products_path(category, product)
+                  %td= link_to product.title, category_product_path(category, product)
                   %td= product.reviews.size
                   %td
                     - if current_user == product.user
@@ -23,14 +23,18 @@
                     - else
                       None for you
 
-%btn#new-product.btn.btn-success
-  New product
-#new-product-form.panel.panel-default
-  .panel-heading
-    %h4 New product
-  .panel-body
-    = render 'products/form'
+- if current_user
+  %btn#new-product.btn.btn-primary
+    New product
+  #new-product-form.panel.panel-default
+    .panel-heading
+      %h4 New product
+    .panel-body
+      = render 'products/form'
 
-#categories-actions
-  = link_to 'Edit category', edit_category_path(category), class: 'btn btn-info'
-  = link_to 'Back', categories_path, class: 'btn btn-primary'
+- if current_user && current_user.admin?
+  #categories-actions
+    = link_to 'Edit category', edit_category_path(category), class: 'btn btn-info'
+    = link_to 'Back', categories_path, class: 'btn btn-info'
+- else
+  = link_to 'Back', categories_path, class: 'btn btn-info'

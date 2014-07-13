@@ -18,7 +18,7 @@
                   %td= link_to product.title, category_product_path(category, product)
                   %td= product.reviews.size
                   %td
-                    - if current_user == product.user
+                    - if current_user && current_user == product.user
                       = link_to 'Edit', edit_category_product_path(category, product), class: 'btn btn-info'
                     - else
                       None for you

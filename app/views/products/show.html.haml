@@ -21,21 +21,25 @@
           %b Category
           = product.category.name
 
-- if current_user
-  %btn#add-review.btn.btn-primary
-    Add review
-  #add-review-form
-    .panel.panel-default
-      .panel-heading
-        %h5 Add review
-      .panel-body
-        = render 'reviews/form'
+- if product.reviews.size == 0
+  %h4 There are no reviews of this product.
+- else
+  .panel.panel-default
+    .panel-heading
+      %h4 Reviews
+    .panel-body
+      = render reviews
 
-.panel.panel-default
-  .panel-heading
-    %h4 Reviews
-  .panel-body
-    = render reviews
+- if current_user
+  .col-md-12.col-xs-12
+    %btn#add-review.btn.btn-primary
+      Add review
+    #add-review-form
+      .panel.panel-default
+        .panel-heading
+          %h5 Add review
+        .panel-body
+          = render 'reviews/form'
 
 = link_to 'Edit', edit_category_product_path(category.id, product.id), class: 'btn btn-primary'
 = link_to 'Back', category_products_path, class: 'btn btn-info'

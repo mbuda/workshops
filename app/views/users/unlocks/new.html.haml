@@ -1,0 +1,18 @@
+.col-md-12
+  .panel.panel-default
+    .panel-heading
+      %h4 Resend unlock instructions
+    .panel-body
+      = simple_form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f|
+      .alert.alert-danger
+        = f.error_notification
+        = f.full_error :unlock_token
+
+      .form-group
+        = f.label :email, class: 'col-md-6 col-xs-6 control-label'
+        = f.text_field :email, required: true, autofocus: true
+
+      .actions
+        = f.button :submit, "Resend unlock instructions", class: 'btn btn-primary'
+
+= render "users/shared/links"
